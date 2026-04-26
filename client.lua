@@ -2,6 +2,7 @@ local radiation = 0.0
 local activeZones = {}
 local createdZones = {}
 
+local playerReady = false
 local nuiVisible = false
 local lastNuiHash = ''
 local effectRunning = false
@@ -16,6 +17,28 @@ local loadedPersistentData = false
 local lastSavedRadiation = 0.0
 local nextAutoSave = 0
 local nextFilterSave = 0
+
+CreateThread(function()
+    SendNUIMessage({
+        action = 'visible',
+        state = false
+    })
+
+    while not NetworkIsPlayerActive(PlayerId()) do
+        Wait(500)
+    end
+
+    while not DoesEntityExist(PlayerPedId()) do
+        Wait(500)
+    end
+
+    Wait(2000)
+
+    playerReady = true
+
+    refreshUi()
+    updateNui(true)
+end)
 
 local function clamp(value, min, max)
     value = tonumber(value) or 0.0
@@ -256,6 +279,10 @@ local function sendRadiationSave(force)
 end
 
 local function setNuiVisible(state)
+    if not playerReady then
+        state = false
+    end
+    
     if nuiVisible == state then return end
 
     nuiVisible = state
