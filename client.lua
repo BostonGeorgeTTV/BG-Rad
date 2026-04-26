@@ -18,28 +18,6 @@ local lastSavedRadiation = 0.0
 local nextAutoSave = 0
 local nextFilterSave = 0
 
-CreateThread(function()
-    SendNUIMessage({
-        action = 'visible',
-        state = false
-    })
-
-    while not NetworkIsPlayerActive(PlayerId()) do
-        Wait(500)
-    end
-
-    while not DoesEntityExist(PlayerPedId()) do
-        Wait(500)
-    end
-
-    Wait(2000)
-
-    playerReady = true
-
-    refreshUi()
-    updateNui(true)
-end)
-
 local function clamp(value, min, max)
     value = tonumber(value) or 0.0
 
@@ -755,6 +733,28 @@ if Config.Debug then
         })
     end, false)
 end
+
+CreateThread(function()
+    SendNUIMessage({
+        action = 'visible',
+        state = false
+    })
+
+    while not NetworkIsPlayerActive(PlayerId()) do
+        Wait(500)
+    end
+
+    while not DoesEntityExist(PlayerPedId()) do
+        Wait(500)
+    end
+
+    Wait(2000)
+
+    playerReady = true
+
+    refreshUi()
+    updateNui(true)
+end)
 
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() then return end
