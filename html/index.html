@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiation UI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="hidden">
+    <div id="radiation-wrapper">
+        <div id="radiation-box" class="state-safe">
+            <div class="bg-noise"></div>
+            <div class="bg-scanlines"></div>
+
+            <div class="hazard-strip top"></div>
+            <div class="hazard-strip bottom"></div>
+
+            <div class="header">
+                <div class="header-left">
+                    <div class="icon-frame">
+                        <img src="img/radiation_icon.png" alt="Radiation Icon" id="radiation-icon">
+                    </div>
+
+                    <div class="title-group">
+                        <div class="title">RAD EXPOSURE</div>
+                        <div class="subtitle">RADIATIONS MONITOR</div>
+                    </div>
+                </div>
+
+                <div class="percent-box">
+                    <span id="radiation-value">0%</span>
+                </div>
+            </div>
+
+            <div class="status-row">
+                <div class="status-label">STATUS</div>
+                <div class="status-value" id="radiation-status">STABILE</div>
+            </div>
+
+            <div class="bar-shell">
+                <div class="bar-grid"></div>
+                <div id="radiation-fill"></div>
+                <div id="radiation-glow"></div>
+            </div>
+
+            <div class="protection-panel">
+                <div class="protection-item">
+                    <span>MASCHERA</span>
+                    <strong id="mask-status" class="off">NO</strong>
+                </div>
+
+                <div class="protection-item">
+                    <span>TUTA</span>
+                    <strong id="suit-status" class="off">NO</strong>
+                </div>
+
+                <div class="protection-item filter-item">
+                    <span>FILTRO</span>
+                    <strong id="filter-status" class="off">NO</strong>
+                    <div class="filter-mini-bar">
+                        <div id="filter-fill"></div>
+                    </div>
+                </div>
+
+                <div class="protection-item">
+                    <span>PROTEZIONE</span>
+                    <strong id="protection-value" class="off">0%</strong>
+                </div>
+            </div>
+
+            <div class="footer-row">
+                <div class="footer-left">
+                    <span class="footer-tag">ENVIRONMENT</span>
+                    <span id="radiation-environment">SAFE ZONE</span>
+                </div>
+
+                <div class="footer-right">
+                    <span class="dot"></span>
+                    <span id="radiation-text">Nessuna esposizione rilevata</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="radiation-sound" src="sound/radiation_extreme.ogg" preload="auto" loop></audio>
+    <script src="app.js"></script>
+</body>
+</html>

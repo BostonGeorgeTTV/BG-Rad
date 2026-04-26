@@ -1,0 +1,154 @@
+ITEM OX INVENTORY
+
+Aggiungi questi item in ox_inventory/data/items.lua
+
+['antirad_syringe'] = {
+    label = 'Siringa antiradiazioni',
+    weight = 100,
+    stack = true,
+    close = true,
+    consume = 1,
+    description = 'Riduce il livello di radiazioni nel corpo.',
+    client = {
+        export = 'bg_radiations.antiRadSyringe',
+        usetime = 3000,
+        cancel = true,
+        anim = {
+            dict = 'emergency1@syring@clip',
+            clip = 'syring_clip',
+            flag = 49
+        },
+        prop = {
+            model = 'prop_syringe_01',
+            bone = 36029,
+            pos = { x = 0.04, y = 0.03, z = 0.0 },
+            rot = { x = -90.44, y = 35.46, z = -16.01 }
+        },
+        disable = {
+            move = false,
+            car = true,
+            combat = true,
+            sprint = true
+        }
+    }
+},
+
+['radiation_filter'] = {
+    label = 'Filtro antiradiazioni',
+    weight = 150,
+    stack = true,
+    close = true,
+    consume = 1,
+    description = 'Filtro intercambiabile per maschere antiradiazioni. Dura 5 minuti in zona contaminata.',
+    client = {
+        export = 'bg_radiations.useRadiationFilter',
+        usetime = 2500,
+        cancel = true,
+        anim = {
+            dict = 'mp_arresting',
+            clip = 'a_uncuff'
+        },
+        disable = {
+            move = false,
+            car = true,
+            combat = true,
+            sprint = true
+        }
+    }
+},
+
+CONFIGURAZIONE VESTITI
+
+In config.lua trovi:
+
+Config.Protection.masks
+Config.Protection.suits
+
+Per configurare maschera e tuta:
+1. Metti Config.Debug = true
+2. Entra in game
+3. Indossa maschera/tuta
+4. Usa /radclothes
+5. Apri F8 e copia component, drawable e texture nel config.lua
+
+Esempio maschera:
+{ component = 1, drawable = 46, textures = false }
+
+Esempio tuta:
+{ component = 11, drawable = 67, textures = false }
+{ component = 4, drawable = 40, textures = false }
+
+textures = false accetta qualsiasi texture di quel drawable.
+textures = { 0, 1, 2 } accetta solo quelle texture.
+
+COMANDI DEBUG
+
+Con Config.Debug = true:
+/radtest 80       -> imposta radiazioni a 80
+/radsoundtest     -> testa il suono per 5 secondi
+/radfiltertest    -> attiva un filtro debug
+/radfiltertest 30 -> attiva un filtro debug da 30 secondi
+/radclothes       -> stampa componenti vestiti in F8
+
+LOGICA PROTEZIONE
+
+- La UI appare quando entri in zona radioattiva anche se sei protetto.
+- La tuta attenua le radiazioni.
+- La maschera protegge solo con filtro attivo.
+- Il filtro viene consumato quando usi l'item radiation_filter.
+- Il timer del filtro scala solo dentro una zona radioattiva.
+- Di default scala solo se stai anche indossando la maschera.
+- Quando il filtro finisce, la maschera smette di proteggere e ricominci a prendere radiazioni.
+
+
+
+
+PERSISTENZA DATABASE
+
+Salva in DB:
+- radiazioni del player
+- secondi rimasti del filtro
+- stato filtro attivo/non attivo
+
+Requisiti :
+- oxmysql
+
+1. Esegui il file SQL:
+   install/bg_radiations_players.sql
+
+2. Nel server.cfg assicurati che l'ordine sia:
+   ensure oxmysql
+   ensure ox_lib
+   ensure ox_inventory
+   ensure bg_radiations
+
+3. In config.lua trovi:
+   Config.Persistence
+
+Di default salva usando la license FiveM.
+Se usi un sistema multicharacter, modifica la funzione getIdentifier(source) in server.lua e usa:
+- ESX identifier personaggio
+- QBCore citizenid
+- Qbox citizenid
+
+Esempio QBCore:
+local QBCore = exports['qb-core']:GetCoreObject()
+local function getIdentifier(source)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if Player and Player.PlayerData and Player.PlayerData.citizenid then
+        return Player.PlayerData.citizenid
+    end
+    return GetPlayerIdentifierByType(source, 'license')
+end
+
+Esempio ESX:
+local ESX = exports['es_extended']:getSharedObject()
+local function getIdentifier(source)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if xPlayer and xPlayer.identifier then
+        return xPlayer.identifier
+    end
+    return GetPlayerIdentifierByType(source, 'license')
+end
+
+Nota: il filtro non scala quando il player è offline. Viene salvato il tempo residuo e ripristinato al rientro.
