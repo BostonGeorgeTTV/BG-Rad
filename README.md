@@ -3,6 +3,7 @@ BG Rad – Advanced Radiation System
 
 <img width="1672" height="941" alt="bgrad" src="https://github.com/user-attachments/assets/0e9080f8-f1be-47d7-9f6e-4a57d9e627df" />
 
+https://www.youtube.com/watch?v=0J4m-D2Gp5g
 
 BG Rad è uno script premium per FiveM pensato per server survival, post-apocalittici, military RP e roleplay con aree contaminate.
 
